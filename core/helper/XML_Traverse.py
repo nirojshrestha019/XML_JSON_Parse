@@ -8,7 +8,14 @@ dict_list = []
 counter = 1
 
 
-def travel_element(row_dict, element, tag):
+def to_string(s):
+    try:
+        return str(s)
+    except:
+        # Change the encoding type if needed
+        return s.encode('utf-8')
+
+def travel_element_xml(row_dict, element, tag):
     """
 
     :param row_dict:
@@ -25,11 +32,36 @@ def travel_element(row_dict, element, tag):
             else:
                 row_dict[key] = row_dict[key] + '||' + value
         else:
-            travel_element(row_dict, child, tag + '##' + child.tag)
+            travel_element_xml(row_dict, child, tag + '##' + child.tag)
+    return row_dict
+
+def travel_element_json(row_dict, key, value):
+
+    # Reduction Condition 1
+    if type(value) is list:
+        # i=0
+        for sub_item in value:
+            travel_element_json(row_dict, key, sub_item)
+
+
+    # Reduction Condition 2
+    elif type(value) is dict:
+        sub_keys = value.keys()
+        for sub_key in sub_keys:
+            travel_element_json(row_dict, key + '##' + to_string(sub_key), value[sub_key])
+
+    # Base Condition
+    else:
+        if key not in row_dict.keys():
+            row_dict[to_string(key)] = to_string(value)
+        else:
+            row_dict[to_string(key)] = row_dict[to_string(key)] + '||' + value
+
     return row_dict
 
 
-def parse_from_root(each_item, total_element):
+
+def parse_from_root(each_item, total_element, input_file_type, element):
     """
 
     :param each_item:
@@ -38,7 +70,11 @@ def parse_from_root(each_item, total_element):
     """
     row_dict = {}
     global dict_list, counter
-    row_dict = travel_element(row_dict, each_item, each_item.tag)
+    if input_file_type == 'xml':
+        row_dict = travel_element_xml(row_dict, each_item, each_item.tag)
+    elif input_file_type == 'json':
+        row_dict = travel_element_json(row_dict, element, each_item)
+
     print(">>>  Progress:  {} %   ".format(int((counter/total_element)*100)), end='\r')
     sys.stdout.flush()
     counter += 1

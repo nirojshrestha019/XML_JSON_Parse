@@ -6,6 +6,7 @@ from core.helper.ProducerConsumerThread import ConsumerThread
 from core.helper.XML_Traverse import output_csv
 import xml.etree.ElementTree as ET
 import os
+import json
 
 
 class XML_Parser:
@@ -23,6 +24,7 @@ class XML_Parser:
         self.input_file = input_file
         self.output_file = output_file
         self.element = element
+        self.input_file_type = self.input_file.split('.')[-1]
         self.element_list = list()
 
     def parse_xml(self):
@@ -30,16 +32,30 @@ class XML_Parser:
 
         :return:
         """
-        it = ET.iterparse(os.path.join(self.input_path, self.input_file))
-        for _, el in it:
-            if '}' in el.tag:
-                el.tag = el.tag.split('}', 1)[1]  # strip all namespaces
-        root = it.root
-        if root.find('{}{}'.format('.//', self.element)) is None:
-            raise ValueError('{} -- Invalid node Element. Please enter a valid Element to parse'.format(self.element))
+        if self.input_file_type == 'xml':
+            it = ET.iterparse(os.path.join(self.input_path, self.input_file))
+            for _, el in it:
+                if '}' in el.tag:
+                    el.tag = el.tag.split('}', 1)[1]  # strip all namespaces
+            root = it.root
+            if root.find('{}{}'.format('.//', self.element)) is None:
+                raise ValueError('{} -- Invalid node Element. Please enter a valid Element to parse'.format(self.element))
+            else:
+                for element in root.iter(self.element):
+                    self.element_list.append(element)
+
+        elif self.input_file_type == 'json':
+            fp = open(os.path.join(self.input_path, self.input_file), 'r')
+            json_value = fp.read()
+            raw_data = json.loads(json_value)
+            fp.close()
+            try:
+                self.element_list = raw_data[self.element]
+            except:
+                self.element_list = raw_data
+
         else:
-            for element in root.iter(self.element):
-                self.element_list.append(element)
+            raise Exception('Invalid File format.')
 
 
     def processing(self):
@@ -51,7 +67,7 @@ class XML_Parser:
         p1 = ProducerThread(self.element_list)
         producer_thread_list = list()
         producer_thread_list.append(p1)
-        consumer_thread_list = [ConsumerThread(total_element) for x in range(100)]
+        consumer_thread_list = [ConsumerThread(total_element, self.input_file_type, self.element) for x in range(100)]
         for each_producer in producer_thread_list:
             each_producer.start()
         for each_consumer in consumer_thread_list:

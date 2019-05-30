@@ -28,13 +28,15 @@ class ProducerThread(Thread):
 
 class ConsumerThread(Thread):
 
-    def __init__(self, total_element):
+    def __init__(self, total_element, input_file_type, element):
         """
 
         :param total_element:
         """
         super(ConsumerThread, self).__init__()
         self.total_element = total_element
+        self.input_file_type = input_file_type
+        self.element = element
 
     def run(self):
         """
@@ -44,5 +46,5 @@ class ConsumerThread(Thread):
         global queue
         while not queue.empty():
             each_item = queue.get()
-            parse_from_root(each_item, self.total_element)
+            parse_from_root(each_item, self.total_element, self.input_file_type, self.element)
             queue.task_done()
