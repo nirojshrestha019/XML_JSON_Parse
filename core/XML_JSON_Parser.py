@@ -9,7 +9,7 @@ import os
 import json
 
 
-class XML_JSON_Parser:
+class XmlJsonParser:
 
     def __init__(self,input_file, output_file, element):
         """
@@ -27,7 +27,7 @@ class XML_JSON_Parser:
         self.input_file_type = self.input_file.split('.')[-1]
         self.element_list = list()
 
-    def file_xml(self):
+    def file_read(self):
         """
 
         :return:
@@ -57,7 +57,6 @@ class XML_JSON_Parser:
         else:
             raise Exception('Invalid File format.')
 
-
     def processing(self):
         """
 
@@ -82,6 +81,6 @@ class XML_JSON_Parser:
 
         :return:
         """
-        self.file_xml()
+        self.file_read()
         self.processing()
         output_csv(self.output_path, self.output_file)
