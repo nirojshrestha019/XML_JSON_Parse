@@ -3,13 +3,13 @@ from core.config.paths import input_path
 from core.config.paths import output_path
 from core.helper.ProducerConsumerThread import ProducerThread
 from core.helper.ProducerConsumerThread import ConsumerThread
-from core.helper.XML_Traverse import output_csv
+from core.helper.XML_JSON_Traverse import output_csv
 import xml.etree.ElementTree as ET
 import os
 import json
 
 
-class XML_Parser:
+class XML_JSON_Parser:
 
     def __init__(self,input_file, output_file, element):
         """
@@ -27,7 +27,7 @@ class XML_Parser:
         self.input_file_type = self.input_file.split('.')[-1]
         self.element_list = list()
 
-    def parse_xml(self):
+    def file_xml(self):
         """
 
         :return:
@@ -82,6 +82,6 @@ class XML_Parser:
 
         :return:
         """
-        self.parse_xml()
+        self.file_xml()
         self.processing()
         output_csv(self.output_path, self.output_file)

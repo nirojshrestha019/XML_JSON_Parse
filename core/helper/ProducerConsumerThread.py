@@ -1,6 +1,6 @@
 from threading import Thread
 from queue import Queue
-from core.helper.XML_Traverse import parse_from_root
+from core.helper.XML_JSON_Traverse import parse_from_root
 
 queue = Queue(150)
 
