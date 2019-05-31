@@ -1,5 +1,5 @@
 # XML_JSON_Parse
-Dynamic XML_JSON parser to transform XML and JSON files to CSV in a instance by the use of multi threading.
+Dynamic XML_JSON parser to transform XML and JSON files to CSV in a instant by the use of multi threading.
 
 
 <h3>Prerequisities</h3>
