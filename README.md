@@ -1,5 +1,5 @@
 # XML_JSON_Parse
-Dynamic XML_JSON parser to transform XML and JSON files into CSV
+Dynamic XML_JSON parser to transform XML and JSON files to CSV
 
 
 <h3>Prerequisities</h3>
