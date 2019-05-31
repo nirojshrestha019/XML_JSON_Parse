@@ -6,14 +6,14 @@ def input_agr():
 
     :return:
     """
-    parser = argparse.ArgumentParser(description='Convert XML file to csv')
+    parser = argparse.ArgumentParser(description='Convert XML or JSON file to csv')
     parser.add_argument(
             '-i',
             '--input_file',
             dest='input_file',
             default=None,
             required=True,
-            help='Source XML file (mandatory)'
+            help='Source XML or JSON file (mandatory)'
         )
     parser.add_argument(
             '-o',
